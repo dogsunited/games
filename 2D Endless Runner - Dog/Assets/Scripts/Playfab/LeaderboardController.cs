@@ -39,7 +39,11 @@ public class LeaderboardController : MonoBehaviour
     }
     public void GetLeadeboard()
     {
-        var requestLeaderboard = new GetLeaderboardRequest { StartPosition = 0, StatisticName = "endless_leaderboard", MaxResultsCount = 7 };
+        if (listingContainer.childCount >= 10)
+        {
+            Destroy(listingContainer.GetChild(9).gameObject);
+        }
+        var requestLeaderboard = new GetLeaderboardRequest { StartPosition = 0, StatisticName = "endless_leaderboard", MaxResultsCount = 10 };
         PlayFabClientAPI.GetLeaderboard(requestLeaderboard, OnGetLeaderboard, OnErrorLeaderboard);
 
     }

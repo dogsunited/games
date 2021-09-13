@@ -20,6 +20,17 @@ public class ManageInput : MonoBehaviour
     }
     private void Start()
     {
+
+        if (PlayfabController.instance.loggedIn)
+        {
+            if (LeaderboardController.instance.listingContainer.childCount > 0)
+            {
+                LeaderboardController.instance.CloseLeaderboard();
+            }
+            LeaderboardController.instance.GetLeadeboard();
+
+        }
+
         textScore.text = PlayerMovement.distancemeters.ToString();
     }
     private void Update()

@@ -11,17 +11,18 @@ public class PlayfabController : MonoBehaviour
 
     private static string displayName;
     private static string usernameID;
+    public bool loggedIn;
+
 
     #region PlayerStats
     private void Awake()
     {
         if (instance == null)
             instance = this;
-
+        loggedIn = false;
         Login();
 
     }
-
 
     public void GetUserUpdateName(string displayNameIn)
     {
@@ -34,7 +35,7 @@ public class PlayfabController : MonoBehaviour
 
     public void Login()
     {
-        var request = new LoginWithCustomIDRequest { CustomId = SystemInfo.deviceUniqueIdentifier + Random.Range(1, 7).ToString(), CreateAccount = true };
+        var request = new LoginWithCustomIDRequest { CustomId = SystemInfo.deviceUniqueIdentifier + Random.Range(1, 15).ToString(), CreateAccount = true };
         PlayFabClientAPI.LoginWithCustomID(request, OnLoginSuccess, OnLoginFailure);
 
 
@@ -42,13 +43,15 @@ public class PlayfabController : MonoBehaviour
     private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log("Congratulations LOGIN call");
-
+        loggedIn = true;
     }
+
 
     private void OnLoginFailure(PlayFabError error)
     {
         var registerRequest = new RegisterPlayFabUserRequest { Username = SystemInfo.deviceUniqueIdentifier };
         PlayFabClientAPI.RegisterPlayFabUser(registerRequest, OnRegisterSuccess, OnRegisterFailure);
+        loggedIn = false;
     }
     private void OnRegisterSuccess(RegisterPlayFabUserResult result)
     {
