@@ -25,7 +25,7 @@ public class LeaderboardController : MonoBehaviour
         {
             Statistics = new List<StatisticUpdate> {
                 new StatisticUpdate {
-                    StatisticName = "endless_leaderboard", Value = score
+                    StatisticName = "doggy_leaderboard", Value = score
                 }
             }
         };
@@ -37,13 +37,24 @@ public class LeaderboardController : MonoBehaviour
 
         Debug.Log("Successful Leaderboard Sent");
     }
+    void Update()
+    {
+        if (listingContainer.childCount >= 11)
+        {
+            for (int i = 10; i < listingContainer.childCount; i++)
+            {
+                Destroy(listingContainer.GetChild(i).gameObject);
+            }
+
+        }
+    }
     public void GetLeadeboard()
     {
         if (listingContainer.childCount >= 10)
         {
             Destroy(listingContainer.GetChild(9).gameObject);
         }
-        var requestLeaderboard = new GetLeaderboardRequest { StartPosition = 0, StatisticName = "endless_leaderboard", MaxResultsCount = 10 };
+        var requestLeaderboard = new GetLeaderboardRequest { StartPosition = 0, StatisticName = "doggy_leaderboard", MaxResultsCount = 10 };
         PlayFabClientAPI.GetLeaderboard(requestLeaderboard, OnGetLeaderboard, OnErrorLeaderboard);
 
     }
