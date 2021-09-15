@@ -26,12 +26,16 @@ public class HighscoresTable : MonoBehaviour
         string jsonString = PlayerPrefs.GetString("highscoreTable");
         Highscores highscores = JsonUtility.FromJson<Highscores>(jsonString);
 
+        highscores.highscoreEntryList.Sort((x, y) => x.score.CompareTo(y.score));
+
         highscoreEntryTranformList = new List<Transform>();
+        int count = 0;
         foreach (HighscoreEntry highscoreEntryl in highscores.highscoreEntryList)
         {
-            if (highscores.highscoreEntryList.Count <= 10 && highscoreEntryl.score > 0)
+            if (count <= 10 && highscoreEntryl.score > 0)
             {
-                CreateHighscoreEntryTable(highscoreEntryl, entryContainer, highscoreEntryTranformList);
+                count++;
+                CreateHighscoreEntryTable(count, highscoreEntryl, entryContainer, highscoreEntryTranformList);
             }
         }
     }
@@ -41,22 +45,13 @@ public class HighscoresTable : MonoBehaviour
 
     }
 
-    public void CreateHighscoreEntryTable(HighscoreEntry highscoreEntry, Transform container, List<Transform> transformList)
+    public void CreateHighscoreEntryTable(int rank, HighscoreEntry highscoreEntry, Transform container, List<Transform> transformList)
     {
 
         Transform entryTransform = Instantiate(entryTemplate, container);
         entryTransform.gameObject.SetActive(true);
 
-        int rank = transformList.Count + 1;
-        string rankString;
-
-        switch (rank)
-        {
-            default:
-                rankString = rank + ""; break;
-        }
-
-        entryTransform.Find("posText").GetComponent<Text>().text = rankString;
+        entryTransform.Find("posText").GetComponent<Text>().text = rank.ToString();
 
         int score = highscoreEntry.score;
 
@@ -78,10 +73,7 @@ public class HighscoresTable : MonoBehaviour
         string jsonString = PlayerPrefs.GetString("highscoreTable");
         Highscores highscores = JsonUtility.FromJson<Highscores>(jsonString);
 
-
         highscores.highscoreEntryList.Add(highscoreEntry);
-        highscores.highscoreEntryList.Sort((x, y) => x.score.CompareTo(y.score));
-        highscores.highscoreEntryList = highscores.highscoreEntryList.GetRange(0, 9);
 
         //Save date
         string json = JsonUtility.ToJson(highscores);
